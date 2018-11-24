@@ -1,23 +1,24 @@
 package pl.sda.vending.controller;
 
-import pl.sda.vending.Service.Repository.VendinMachineRepository;
+import pl.sda.vending.controller.Service.CustomerService;
 import pl.sda.vending.model.Product;
 import pl.sda.vending.model.Tray;
 import pl.sda.vending.model.VendingMachine;
 import pl.sda.vending.util.StringUtil;
 
 import java.util.Optional;
+import java.util.Scanner;
 
 public class CustomerOperationController {
-    private final VendinMachineRepository machineRepository;
+    private final CustomerService customerService;
     private final Integer trayWitdh = 12;
 
-    public CustomerOperationController(VendinMachineRepository machineRepository) {
-        this.machineRepository = machineRepository;
+    public CustomerOperationController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     public void printMachine() {
-        Optional<VendingMachine> loadedMachine = machineRepository.load();
+        Optional<VendingMachine> loadedMachine = customerService.loadMachineToPrint();
         if (!loadedMachine.isPresent()){
             System.out.println("Vending Machine out of service");
             return;
@@ -55,16 +56,14 @@ public class CustomerOperationController {
         }
     }
 
-    public Optional<Product> buyProductForSymbol(String traySymbol){
-        Optional<VendingMachine> loadedMachine = machineRepository.load();
-        if (loadedMachine.isPresent()){
-            VendingMachine machine = loadedMachine.get();
-            Optional<Product> boughtProduct = machine.buyProductWithSymbol(traySymbol.toUpperCase());
-            machineRepository.save(machine);
-            return boughtProduct;
+    public void buyProduct(){
+        System.out.print(" > Tray symbol: ");
+        String traySymbol = new Scanner(System.in).nextLine();
+        Optional<Product> product = customerService.buyProductFromTray(traySymbol);
+        if (product.isPresent()) {
+            System.out.println(" > Please take your product: " + product.get().getName());
         } else {
-            System.out.println("Vending machine out of service");
-            return Optional.empty();
+            System.out.println("Out of stock");
         }
     }
 

@@ -1,10 +1,12 @@
 package pl.sda.vending;
 
 import pl.sda.vending.Repository.HardDriveVendingMachineRepository;
+import pl.sda.vending.Service.DefaultCustomerService;
 import pl.sda.vending.Service.DefaultEmployeeService;
 import pl.sda.vending.Service.Repository.VendinMachineRepository;
 import pl.sda.vending.controller.CustomerOperationController;
 import pl.sda.vending.controller.EmployeeOperationController;
+import pl.sda.vending.controller.Service.CustomerService;
 import pl.sda.vending.controller.Service.EmployeeService;
 import pl.sda.vending.model.Product;
 import pl.sda.vending.util.Configuration;
@@ -16,8 +18,9 @@ public class Main {
     Configuration configuration = new Configuration();
     VendinMachineRepository vendingMachineRepository = new HardDriveVendingMachineRepository(configuration);
     EmployeeService employeeService = new DefaultEmployeeService(vendingMachineRepository, configuration);
+    CustomerService customerService = new DefaultCustomerService(vendingMachineRepository);
     EmployeeOperationController employeeOperationController = new EmployeeOperationController(employeeService);
-    CustomerOperationController customerOperationController = new CustomerOperationController(vendingMachineRepository);
+    CustomerOperationController customerOperationController = new CustomerOperationController(customerService);
 
     private void startApplication() {
         while (true) {
@@ -27,14 +30,7 @@ public class Main {
                 UserMenuSelection userSelection = getUserSelection();
                 switch (userSelection) {
                     case BUY_PRODUCT:
-                        System.out.print(" > Tray symbol: ");
-                        String traySymbol = new Scanner(System.in).nextLine();
-                        Optional<Product> product = customerOperationController.buyProductForSymbol(traySymbol);
-                        if (product.isPresent()) {
-                            System.out.println(" > Please take your product: " + product.get().getName());
-                        } else {
-                            System.out.println(" > Tray is empty ");
-                        }
+                        customerOperationController.buyProduct();
                         break;
                     case EXIT:
                         System.out.println(" > Bye ");
@@ -75,8 +71,10 @@ public class Main {
                         employeeOperationController.addProducts();
                         break;
                     case REMOVE_PRODUCT_FROM_TRAY:
+                        employeeOperationController.removeProductsFromTray();
                         break;
                     case CHANGE_PRICE:
+                        employeeOperationController.changePrice();
                         break;
                     case EXIT:
                         System.out.println("End service menu");
@@ -127,3 +125,4 @@ public class Main {
 
     }
 }
+

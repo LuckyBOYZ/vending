@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class EmployeeOperationController {
 
-    public final EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     public EmployeeOperationController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -34,6 +34,27 @@ public class EmployeeOperationController {
     public void removeTray() {
         Optional<String> errorMessage = employeeService.removeTrayWithSymbol(getTraySymbolFromUSer());
         System.out.println(errorMessage.orElse("Tray has been removed"));
+    }
+
+    public void changePrice(){
+        String symbol = getTraySymbolFromUSer();
+        Long price = getTrayPriceFromUser();
+        Optional<String> error = employeeService.updatedPrice(symbol, price);
+        if (error.isPresent()){
+            System.out.println(error.get());
+        } else {
+            System.out.println("Success");
+        }
+    }
+
+    public void removeProductsFromTray(){
+        String traySymbolFromUSer = getTraySymbolFromUSer();
+        Optional<String> error = employeeService.removeProductsFromTray(traySymbolFromUSer);
+        if (error.isPresent()){
+            System.out.println(error.get());
+        } else {
+            System.out.println("Products from tray are removed");
+        }
     }
 
 

@@ -31,6 +31,10 @@ public class Tray implements Serializable {
         return new Builder(symbol);
     }
 
+    public Product removeProductFromTray(){
+        return products.poll();
+    }
+
     public String getSymbol() {
         return symbol;
     }
@@ -45,6 +49,10 @@ public class Tray implements Serializable {
         } else {
             return false;
         }
+    }
+
+    public void updatePrice(Long price){
+        this.price = price;
     }
 
     public static class Builder {

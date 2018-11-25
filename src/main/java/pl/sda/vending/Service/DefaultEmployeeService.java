@@ -19,14 +19,14 @@ public class DefaultEmployeeService implements EmployeeService {
     }
 
     @Override
-    public Optional<String> addTray(Tray tray) {
+    public Optional<String> addTrayForSymbolAndPrice(String traySymbol , Long price) {
         Optional<VendingMachine> optionalVendingMachine = machineRepository.load();
         VendingMachine vendingMachine = optionalVendingMachine.orElseGet(() -> new VendingMachine(configuration));
-        if (vendingMachine.placeTrayAtPosition(tray)) {
+        if (vendingMachine.placeTrayAtPosition(Tray.builder(traySymbol).price(price).build())) {
             machineRepository.save(vendingMachine);
             return Optional.empty();
         } else {
-            return Optional.of("Not add tray");
+            return Optional.of("Could not add tray");
         }
     }
 

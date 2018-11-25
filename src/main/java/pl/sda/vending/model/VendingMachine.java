@@ -68,7 +68,7 @@ public class VendingMachine implements Serializable {
     public boolean addProductWithSymbol(String traySymbol, Product product) {
         getTrayForSymbol(traySymbol);
         Optional<Tray> trayForSymbol = getTrayForSymbol(traySymbol);
-        if (trayForSymbol.isPresent()){
+        if (trayForSymbol.isPresent()) {
             return trayForSymbol.get().addProduct(product);
         } else {
             return false;
@@ -105,18 +105,18 @@ public class VendingMachine implements Serializable {
         return trayAtPosition;
     }
 
-    private Optional<Tray> getTrayForSymbol( String traySymbol){
+    private Optional<Tray> getTrayForSymbol(String traySymbol) {
         if (traySymbol.length() != 2) {
             return Optional.empty();
         }
         int rowNo = traySymbol.charAt(0) - 'A';
         int colNo = traySymbol.charAt(1) - '1';
-        return getTrayAtPosition(rowNo , colNo);
+        return getTrayAtPosition(rowNo, colNo);
     }
 
-    public boolean updatePriceForSymbol(String traySymbol , Long updatedPrice){
+    public boolean updatePriceForSymbol(String traySymbol, Long updatedPrice) {
         Optional<Tray> trayForSymbol = getTrayForSymbol(traySymbol);
-        if (trayForSymbol.isPresent()){
+        if (trayForSymbol.isPresent()) {
             trayForSymbol.get().updatePrice(updatedPrice);
             return true;
         } else {
@@ -124,7 +124,7 @@ public class VendingMachine implements Serializable {
         }
     }
 
-    public Optional<Product> removeProductFromTray (String traySymbol){
+    public Optional<Product> removeProductFromTray(String traySymbol) {
         Optional<Tray> trayForSymbol = getTrayForSymbol(traySymbol);
         if (trayForSymbol.isPresent()) {
             Product product = trayForSymbol.get().removeProductFromTray();
@@ -132,5 +132,18 @@ public class VendingMachine implements Serializable {
         } else {
             return Optional.empty();
         }
+    }
+
+    public VendingMachineSnapshot snapshot() {
+        VendingMachineSnapshot.Builder builder = VendingMachineSnapshot.builder(rowsCount, colsCount);
+        for (int i = 0; i < rowsCount; i++) {
+            for (int j = 0; j < colsCount; j++) {
+                Tray tray = trays[i][j];
+                if (tray != null) {
+                    builder.tray(i, j, tray.snapshot());
+                }
+            }
+        }
+        return builder.build();
     }
 }

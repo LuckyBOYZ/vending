@@ -8,10 +8,8 @@ import pl.sda.vending.controller.CustomerOperationController;
 import pl.sda.vending.controller.EmployeeOperationController;
 import pl.sda.vending.controller.Service.CustomerService;
 import pl.sda.vending.controller.Service.EmployeeService;
-import pl.sda.vending.model.Product;
 import pl.sda.vending.util.Configuration;
 
-import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {

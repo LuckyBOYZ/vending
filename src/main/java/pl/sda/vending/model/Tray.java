@@ -1,5 +1,7 @@
 package pl.sda.vending.model;
 
+import sun.reflect.generics.tree.Tree;
+
 import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Optional;
@@ -53,6 +55,10 @@ public class Tray implements Serializable {
 
     public void updatePrice(Long price){
         this.price = price;
+    }
+
+    public TraySnapshot snapshot(){
+        return new TraySnapshot(getSymbol(), getPrice(), firstProductName().orElse("--"));
     }
 
     public static class Builder {

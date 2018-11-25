@@ -1,7 +1,6 @@
 package pl.sda.vending.controller;
 
 import pl.sda.vending.controller.Service.EmployeeService;
-import pl.sda.vending.model.Tray;
 
 import java.util.Optional;
 import java.util.Scanner;
@@ -21,13 +20,9 @@ public class EmployeeOperationController {
 
     public void addTray() {
         String symbol = getTraySymbolFromUSer();
-        Long price = getTrayPriceFromUser();
+        Long price = getPriceFromUser();
 
-        Tray newTray = Tray.builder(symbol)
-                .price(price)
-                .build();
-
-        Optional<String> errorMessege = employeeService.addTray(newTray);
+        Optional<String> errorMessege = employeeService.addTrayForSymbolAndPrice(symbol ,price);
         System.out.println(errorMessege.orElse("Tray has been added"));
     }
 
@@ -38,7 +33,7 @@ public class EmployeeOperationController {
 
     public void changePrice(){
         String symbol = getTraySymbolFromUSer();
-        Long price = getTrayPriceFromUser();
+        Long price = getPriceFromUser();
         Optional<String> error = employeeService.updatedPrice(symbol, price);
         if (error.isPresent()){
             System.out.println(error.get());
@@ -63,7 +58,7 @@ public class EmployeeOperationController {
         return getUserInputString().toUpperCase();
     }
 
-    private Long getTrayPriceFromUser() {
+    private Long getPriceFromUser() {
         Long price = null;
         while (price == null) {
             System.out.print(" > Provided tray price: ");
